@@ -2,7 +2,7 @@
 title: Pavel Holman
 summary: AI engineer and co-founder writing software professionally since 2020; leads small teams that ship products; three-time ICPC finalist. Open to remote work and thesis-linked collaboration.
 headline: AI engineer and co-founder
-lede: AI engineer and co-founder of two companies, working professionally since 2020. Leads small teams end to end and builds agentic development tooling and LLM workflows; strong in Kotlin, algorithms and data structures. Three-time ICPC finalist.
+lede: Co-founded two companies; working professionally since 2020. Leads small teams and builds agentic development tooling and LLM workflows. Three-time ICPC finalist.
 location: Prague, Czechia
 links:
   email: mailto:pavelholman@email.cz
@@ -38,7 +38,7 @@ cv:
   omit: [education/ml-prague-2026]
 languages:
   Czech: native
-  English: professional working proficiency (Cambridge English First, B2)
+  English: B2 (Cambridge English First)
 ---
 
 Pavel Holman is a Prague software engineer, working professionally since March 2020, finishing a master's degree in Artificial Intelligence at CTU FEE (expected June 2027) after a bachelor's in AI at CTU FIT. He co-founded DeelsCorp (2024) and poqet (2026) and is principal engineer of poqet, as he was of DeelsCorp until May 2026: he led the four-person Deels team across mobile apps, a Kotlin backend, APIs and infrastructure, and now leads the three-person SLIM team while owning its agent-assisted development process. Part-time at Merica from 2020 to 2024 on C# business software. ICPC finalist at CERC 2024, CERC 2025 and EUC 2026.

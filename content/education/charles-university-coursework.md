@@ -1,5 +1,5 @@
 ---
-title: Deep Learning and Deep Reinforcement Learning
+title: Deep Learning (spring 2024), Deep Reinforcement Learning (spring 2026)
 summary: Milan Straka's DL and DRL courses, taken in 2024 and 2026 and credited to the CTU master's, with PyTorch and Keras.
 start: 2024-02
 end: 2026-06

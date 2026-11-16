@@ -4,10 +4,10 @@ summary: Leads a three-person team building SLIM and owns the agentic developmen
 start: 2026-06
 role: Co-founder and Principal Engineer
 highlights:
-  - Lead a three-person team building SLIM, a lab operations platform used by research groups at three Prague institutions.
-  - "Built the team's agentic development harness: Claude Code with TypeScript automation, architectural guardrails and evaluations, cutting feature development time from weeks to days."
-  - 'Automated sales prospecting: sourcing local business leads, generating template-based websites and preparing cold outreach emails for the sales team.'
+  - Lead a three-person team building SLIM, a lab operations platform in SvelteKit used by research groups at three Prague institutions.
   - 'Build internal LLM workflows: LangChain and LangGraph, retrieval-augmented generation over vector databases, traced with Langfuse.'
+  - "Built the team's agentic development harness: Claude Code with TypeScript automation, architectural guardrails and evaluations; measured feature development time fell from weeks to days."
+  - 'Automated sales prospecting: sourcing local business leads, generating template-based websites and preparing cold outreach emails for the sales team.'
 employment: founder
 at: [organization/poqet]
 led: [project/slim]
