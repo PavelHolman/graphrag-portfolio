@@ -502,6 +502,9 @@
           "field": {
             "type": "string"
           },
+          "honors": {
+            "type": "string"
+          },
           "at": {
             "type": "array",
             "items": {

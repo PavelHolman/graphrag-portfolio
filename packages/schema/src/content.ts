@@ -105,6 +105,8 @@ export const EducationFrontmatter = Schema.Struct({
   end: Schema.optionalKey(PlainTime),
   degree: Schema.optionalKey(Schema.String),
   field: Schema.optionalKey(Schema.String),
+  /** A distinction the degree was awarded with, printed under it on the CV. */
+  honors: Schema.optionalKey(Schema.String),
   at: EdgeList,
   taught: EdgeList,
   /** A thesis or a course project the studies produced. */

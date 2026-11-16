@@ -26,6 +26,7 @@ export interface EducationItem {
   readonly title: string;
   readonly degree: string | undefined;
   readonly field: string | undefined;
+  readonly honors: string | undefined;
   readonly organization: string | undefined;
   readonly range: string;
   readonly body: string;
@@ -168,6 +169,7 @@ export const buildPageModel = (
       title: n.title,
       degree: field(n, 'degree'),
       field: field(n, 'field'),
+      honors: field(n, 'honors'),
       organization: byId.get(out(n.id, 'at')[0]?.target ?? '')?.title,
       range: range(n),
       body: n.body,

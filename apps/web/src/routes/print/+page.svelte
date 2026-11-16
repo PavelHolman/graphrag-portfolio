@@ -144,6 +144,7 @@
           </h3>
           <span class="when">{dates(e.range)}</span>
         </div>
+        {#if e.honors}<p class="owned">{e.honors}</p>{/if}
         {#each e.projects as t (t.id)}
           <p class="owned">
             Thesis{t.end && t.end > today ? ' (in progress)' : ''}: {#if t.url}<a href={t.url}

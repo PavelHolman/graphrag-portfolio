@@ -51,6 +51,7 @@ const SCALAR_FIELDS = [
   'employment',
   'degree',
   'field',
+  'honors',
   'url',
   'repo',
   'location',
