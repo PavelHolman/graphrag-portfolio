@@ -5,9 +5,9 @@ start: 2020-03
 end: 2024-05
 role: Software Developer
 highlights:
-  - Contributed to an employee rostering solver built with Google OR-Tools and OptalCP.
+  - Worked on modeling and integration for an employee rostering solver built with Google OR-Tools and OptalCP.
   - Built and tested ERP features and data loaders in C#.
-  - Carried out migration of core libraries from .NET Framework to .NET Core.
+  - Migrated core libraries from .NET Framework to .NET Core.
 employment: part-time
 at: [organization/merica]
 delivered: [project/ferp, project/employee-rostering]

@@ -6,8 +6,8 @@ end: 2026-05
 role: Co-founder and Principal Engineer
 highlights:
   - Led a four-person team that shipped Deels, a restaurant marketplace used by 80 partners in Prague.
-  - 'Owned engineering end to end: Kotlin backend and GraphQL APIs, Kotlin Multiplatform and SwiftUI apps, infrastructure.'
-  - Shared about 50% of mobile code across iOS and Android with Kotlin Multiplatform, reducing duplicate implementation and speeding up feature development.
+  - 'Owned engineering end to end: Kotlin backend on PostgreSQL, GraphQL APIs, Kotlin Multiplatform and SwiftUI apps, infrastructure.'
+  - Shared about 50% of mobile code across iOS and Android with Kotlin Multiplatform, building new screens in half the time.
   - Won a CZK 1 million grant from CzechInvest's Technology Incubation programme.
 employment: founder
 at: [organization/deelscorp]

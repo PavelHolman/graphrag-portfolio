@@ -17,10 +17,10 @@
   const dates = (range: string): string =>
     range
       .replace(/^(\d{4}-\d{2})(-\d{2})? – \1(-\d{2})?$/, '$1')
-      .replace(/(\d{4})-(\d{2})(-\d{2})?/g, (iso, y: string, mo: string) => {
-        const label = `${MONTHS[Number(mo) - 1]} ${y}`;
-        return iso > today ? `${label} (expected)` : label;
-      });
+      .replace(
+        /(\d{4})-(\d{2})(-\d{2})?/g,
+        (_iso, y: string, mo: string) => `${MONTHS[Number(mo) - 1]} ${y}`,
+      );
   // The Person's `cv.omit` keeps the page to one sheet; the site still shows those Nodes.
   const kept = <T extends { id: string }>(xs: ReadonlyArray<T>) =>
     xs.filter((x) => !p.cv.omit.includes(x.id));
@@ -138,13 +138,19 @@
       <article>
         <div class="row">
           <h3>
-            {[e.degree, e.field].filter(Boolean).join(' in ')}{#if e.organization}<span class="org"
-                >{' · '}{e.organization}</span
-              >{/if}
+            {[e.degree, e.field].filter(Boolean).join(' in ')}
           </h3>
           <span class="when">{dates(e.range)}</span>
         </div>
-        {#if e.honors}<p class="owned">{e.honors}</p>{/if}
+        {#if e.organization}<p class="owned">
+            {[
+              e.organization,
+              e.honors && e.honors.charAt(0).toLowerCase() + e.honors.slice(1),
+              e.projects.some((t) => t.end && t.end > today) && 'expected graduation',
+            ]
+              .filter(Boolean)
+              .join(' · ')}
+          </p>{/if}
         {#each e.projects as t (t.id)}
           <p class="owned">
             Thesis{t.end && t.end > today ? ' (in progress)' : ''}: {#if t.url}<a href={t.url}
