@@ -66,6 +66,52 @@
                   "pattern": "^(person|skill|project|experience|education|organization|domain)\\/[a-z0-9]+(?:-[a-z0-9]+)*$",
                   "description": "a Node id of the form <type>/<slug>"
                 }
+              },
+              "coursework": {
+                "type": "boolean"
+              },
+              "omitHighlights": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "targets": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "properties": {
+                    "skills": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "pattern": "^(person|skill|project|experience|education|organization|domain)\\/[a-z0-9]+(?:-[a-z0-9]+)*$",
+                          "description": "a Node id of the form <type>/<slug>"
+                        }
+                      }
+                    },
+                    "omit": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^(person|skill|project|experience|education|organization|domain)\\/[a-z0-9]+(?:-[a-z0-9]+)*$",
+                        "description": "a Node id of the form <type>/<slug>"
+                      }
+                    },
+                    "coursework": {
+                      "type": "boolean"
+                    },
+                    "omitHighlights": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "additionalProperties": true
+                }
               }
             },
             "additionalProperties": true
@@ -208,6 +254,13 @@
           },
           "repo": {
             "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "thesis",
+              "course-project"
+            ]
           },
           "uses": {
             "type": "array",
@@ -504,6 +557,12 @@
           },
           "honors": {
             "type": "string"
+          },
+          "coursework": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "at": {
             "type": "array",

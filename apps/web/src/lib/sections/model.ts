@@ -1,4 +1,4 @@
-import type { ArtifactEdge, ArtifactNode, PlainTime } from '@graphrag/schema';
+import type { ArtifactEdge, ArtifactNode, CvTarget, PlainTime } from '@graphrag/schema';
 import { compareStart, startOf } from '@graphrag/schema';
 
 /** Section view models built server-side from the artifact. `docs/spec/page.md`. */
@@ -38,7 +38,11 @@ export interface EducationItem {
     url: string | undefined;
     /** ISO end, so a thesis due later reads as in progress. */
     end: string | undefined;
+    /** A thesis unless the Project says it is a course project. */
+    kind: string | undefined;
   }>;
+  /** Course titles a targeted CV may list. */
+  readonly coursework: ReadonlyArray<string>;
 }
 /** A Project no Experience or Education owns: it gets its own card. */
 export interface ProjectItem {
@@ -62,6 +66,13 @@ export interface SkillGroup {
     span: string;
   }>;
 }
+/** What one CV variant prints: Skill groups by title, Node ids to leave out, coursework lines. */
+export interface CvView {
+  readonly skills: ReadonlyArray<{ group: string; titles: ReadonlyArray<string> }>;
+  readonly omit: ReadonlyArray<string>;
+  readonly coursework: boolean;
+  readonly omitHighlights: ReadonlyArray<string>;
+}
 export interface PageModel {
   readonly person: {
     name: string;
@@ -74,11 +85,8 @@ export interface PageModel {
     workingSince: string | undefined;
     links: Record<string, string>;
     languages: Record<string, string>;
-    /** CV curation from the Person Node: Skill groups by title, and Node ids to leave out. */
-    cv: {
-      skills: ReadonlyArray<{ group: string; titles: ReadonlyArray<string> }>;
-      omit: ReadonlyArray<string>;
-    };
+    /** CV curation from the Person Node: the default, plus named variants that override it. */
+    cv: CvView & { targets: Readonly<Record<string, CvView>> };
   };
   readonly experience: ReadonlyArray<ExperienceItem>;
   readonly education: ReadonlyArray<EducationItem>;
@@ -126,6 +134,18 @@ export const buildPageModel = (
   const out = (id: string, type: ArtifactEdge['type']) =>
     edges.filter((e) => e.source === id && e.type === type);
   const person = visible.find((n) => n.type === 'person');
+  const cvView = (s: CvTarget): CvView => ({
+    skills: Object.entries(s.skills ?? {}).map(([group, ids]) => ({
+      group,
+      titles: ids.flatMap((id) => {
+        const n = byId.get(id);
+        return n && !n.hidden ? [n.title] : [];
+      }),
+    })),
+    omit: s.omit ?? [],
+    coursework: s.coursework ?? false,
+    omitHighlights: s.omitHighlights ?? [],
+  });
   // A Project renders under exactly one owner: the first Experience or Education (in section
   // order) that `led` or `delivered` it. The schema allows several owners; the page never shows twice.
   const placed = new Set<string>();
@@ -182,7 +202,9 @@ export const buildPageModel = (
           summary: p.summary,
           url: urlOf(p),
           end: p.end ? fmt(p.end) : undefined,
+          kind: field(p, 'kind'),
         })),
+      coursework: n.coursework ?? [],
     }));
 
   // Projects nobody `delivered` or `led` stand on their own (this site, contest results).
@@ -238,14 +260,13 @@ export const buildPageModel = (
       links: person?.links ?? {},
       languages: person?.languages ?? {},
       cv: {
-        skills: Object.entries(person?.cv?.skills ?? {}).map(([group, ids]) => ({
-          group,
-          titles: ids.flatMap((id) => {
-            const s = byId.get(id);
-            return s && !s.hidden ? [s.title] : [];
-          }),
-        })),
-        omit: person?.cv?.omit ?? [],
+        ...cvView(person?.cv ?? {}),
+        targets: Object.fromEntries(
+          Object.entries(person?.cv?.targets ?? {}).map(([name, t]) => [
+            name,
+            cvView({ ...person?.cv, ...t }),
+          ]),
+        ),
       },
     },
     experience,

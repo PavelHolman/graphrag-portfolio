@@ -6,6 +6,8 @@
   let { data } = $props();
   const m = $derived(data.model);
   const p = $derived(m.person);
+  /** The default CV or the `?target=` variant. */
+  const cv = $derived(data.cv);
 
   const COMPETITIVE = 'domain/competitive-programming';
   // Categories in the order a reader scans for them; anything new lands at the end.
@@ -23,13 +25,15 @@
       );
   // The Person's `cv.omit` keeps the page to one sheet; the site still shows those Nodes.
   const kept = <T extends { id: string }>(xs: ReadonlyArray<T>) =>
-    xs.filter((x) => !p.cv.omit.includes(x.id));
+    xs.filter((x) => !cv.omit.includes(x.id));
   // Degrees get an entry each; exchanges, coursework and workshops one line each beneath them.
   const degrees = $derived(kept(m.education).filter((e) => e.degree));
   const courses = $derived(kept(m.education).filter((e) => !e.degree));
   // The body already names every owned Project; the line below it is there for the links.
   const linked = <T extends { url: string | undefined }>(xs: ReadonlyArray<T>) =>
     xs.filter((x) => x.url);
+  const bullets = (hs: ReadonlyArray<string>) =>
+    hs.filter((h) => !cv.omitHighlights.some((start) => h.startsWith(start)));
   const handle = (href: string) => href.replace(/\/$/, '').split('/').pop() ?? href;
   const bare = (href: string) => href.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
 
@@ -48,8 +52,8 @@
   const contests = $derived(kept(m.projects).filter((x) => x.domains.includes(COMPETITIVE)));
   // Curated groups when the Person defines them, else every Skill by category.
   const skills = $derived(
-    p.cv.skills.length
-      ? p.cv.skills.map((g) => ({ label: g.group, titles: g.titles }))
+    cv.skills.length
+      ? cv.skills.map((g) => ({ label: g.group, titles: g.titles }))
       : [...m.skills]
           .sort(
             (a, b) =>
@@ -94,7 +98,7 @@
         </div>
         {#if x.highlights.length}
           <ul>
-            {#each x.highlights as h (h)}<li>{h}</li>{/each}
+            {#each bullets(x.highlights) as h (h)}<li>{h}</li>{/each}
           </ul>
         {:else}
           <p>{x.body}</p>
@@ -151,12 +155,18 @@
               .filter(Boolean)
               .join(' · ')}
           </p>{/if}
-        {#each e.projects as t (t.id)}
+        {#each kept(e.projects).filter((t) => t.kind !== 'course-project') as t (t.id)}
           <p class="owned">
             Thesis{t.end && t.end > today ? ' (in progress)' : ''}: {#if t.url}<a href={t.url}
                 >{t.title}</a
               >{:else}<b>{t.title}</b>{/if}
           </p>
+        {/each}
+        {#if cv.coursework && e.coursework.length}
+          <p class="owned">Relevant coursework: {e.coursework.join(', ')}</p>
+        {/if}
+        {#each kept(e.projects).filter((t) => t.kind === 'course-project') as t (t.id)}
+          <p class="owned">{t.summary ?? t.title}</p>
         {/each}
       </article>
     {/each}
