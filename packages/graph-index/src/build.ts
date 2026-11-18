@@ -84,6 +84,7 @@ const toArtifactNode = (
     ...(n.frontmatter.summary !== undefined ? { summary: n.frontmatter.summary } : {}),
     ...(Array.isArray(fm.aliases) ? { aliases: fm.aliases as Array<string> } : {}),
     ...(Array.isArray(fm.highlights) ? { highlights: fm.highlights as Array<string> } : {}),
+    ...(Array.isArray(fm.coursework) ? { coursework: fm.coursework as Array<string> } : {}),
     ...(fm.links && typeof fm.links === 'object'
       ? { links: fm.links as Record<string, string> }
       : {}),

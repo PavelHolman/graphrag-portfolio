@@ -2,6 +2,8 @@
 // and screenshots the Hero at rest to `static/hero.png` (the link preview) with Playwright. With
 // --verify it renders to memory and compares the PDF's extracted text, whitespace aside, and the
 // PNG's dimensions with the committed files instead (bytes differ on every run). docs/spec/page.md.
+// `--target <name>` prints the Person's `cv.targets.<name>` variant to the gitignored `cv-targets/`
+// instead: a CV for one kind of application, never deployed with the site.
 import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem';
 import { Data, Effect, FileSystem, Schedule } from 'effect';
 import { chromium } from '@playwright/test';
@@ -9,7 +11,11 @@ import { extractText, getDocumentProxy } from 'unpdf';
 import { join } from 'node:path';
 
 const WEB = join(import.meta.dir, '..');
-const CV = join(WEB, 'static', 'cv.pdf');
+const targetAt = process.argv.indexOf('--target');
+const TARGET = targetAt === -1 ? undefined : process.argv[targetAt + 1];
+const CV = TARGET
+  ? join(WEB, '..', '..', 'cv-targets', `cv-${TARGET}.pdf`)
+  : join(WEB, 'static', 'cv.pdf');
 const HERO = join(WEB, 'static', 'hero.png');
 /** The size LinkedIn, Slack and X crop link previews to. */
 const PREVIEW = { width: 1200, height: 630 };
@@ -55,11 +61,16 @@ const render = Effect.gen(function* () {
   yield* preview;
   const b = yield* browser;
   const page = yield* attempt('open page', () => b.newPage());
-  yield* attempt('load /print', () => page.goto(`${ORIGIN}/print`, { waitUntil: 'networkidle' }));
+  const path = TARGET ? `/print?target=${encodeURIComponent(TARGET)}` : '/print';
+  const res = yield* attempt('load /print', () =>
+    page.goto(`${ORIGIN}${path}`, { waitUntil: 'networkidle' }),
+  );
+  if (!res?.ok()) return yield* new RenderError({ step: `load ${path}: status ${res?.status()}` });
   yield* attempt('fonts', () => page.evaluate(() => document.fonts.ready.then(() => undefined)));
   const pdf = yield* attempt('print', () =>
     page.pdf({ preferCSSPageSize: true, printBackground: true, tagged: true }),
   );
+  if (TARGET) return { pdf: new Uint8Array(pdf), png: undefined };
   const hero = yield* attempt('open hero', () =>
     b.newPage({ viewport: PREVIEW, deviceScaleFactor: 1 }),
   );
@@ -98,8 +109,15 @@ const main = Effect.gen(function* () {
   const { pdf, png } = yield* render;
   const { totalPages, text } = yield* textOf(pdf);
   if (totalPages !== 1) {
-    yield* err(`cv.pdf has ${totalPages} pages; the CV must fit one. Shorten the content.`);
+    yield* err(`${CV} has ${totalPages} pages; the CV must fit one. Shorten the content.`);
     return 1;
+  }
+  if (TARGET || !png) {
+    // A target CV is private and generated on demand, so there is nothing committed to verify.
+    yield* fs.makeDirectory(join(CV, '..'), { recursive: true });
+    yield* fs.writeFile(CV, pdf);
+    yield* log(`wrote ${CV} (${Math.round(pdf.length / 1024)} KiB)`);
+    return 0;
   }
   if (!verify) {
     yield* fs.writeFile(CV, pdf);

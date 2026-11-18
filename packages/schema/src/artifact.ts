@@ -18,6 +18,8 @@ export const ArtifactNode = Schema.Struct({
   aliases: Schema.optionalKey(Schema.Array(Schema.String)),
   /** Experience bullets for the CV; the body stays the LLM's source and the site's card text. */
   highlights: Schema.optionalKey(Schema.Array(Schema.String)),
+  /** Education only: course titles a targeted CV may list. */
+  coursework: Schema.optionalKey(Schema.Array(Schema.String)),
   /** Type-specific scalar fields (role, degree, category, url, ...). */
   fields: Schema.Record(
     Schema.String,

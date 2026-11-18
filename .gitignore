@@ -11,3 +11,5 @@ prototypes/
 .DS_Store
 test-results/
 playwright-report/
+# Private, per-application CVs from `bun content:render --target <name>`.
+cv-targets/

@@ -38,12 +38,26 @@ export const Employment = Schema.Literals([
 ]);
 export const OrganizationKind = Schema.Literals(['company', 'university', 'client', 'community']);
 
-/** What the generated CV shows beyond the Sections: story-ordered Skill groups and Nodes to leave out. */
-export const CvSettings = Schema.Struct({
+const CvFields = {
   /** Group label to Skill ids, in print order; Skills in no group stay off the CV. */
   skills: Schema.optionalKey(Schema.Record(Schema.String, Schema.Array(NodeId))),
   /** Nodes the site shows but the one-page CV leaves out. */
   omit: Schema.optionalKey(Schema.Array(NodeId)),
+  /** Print each Education's `coursework` as a "Relevant coursework" line. */
+  coursework: Schema.optionalKey(Schema.Boolean),
+  /** Experience highlights to leave out, matched by how they start. */
+  omitHighlights: Schema.optionalKey(Schema.Array(Schema.String)),
+};
+
+/** A CV variant for one kind of application; each field it sets replaces the default's. */
+export const CvTarget = Schema.Struct(CvFields);
+export type CvTarget = typeof CvTarget.Type;
+
+/** What the generated CV shows beyond the Sections: story-ordered Skill groups and Nodes to leave out. */
+export const CvSettings = Schema.Struct({
+  ...CvFields,
+  /** Named variants, printed with `bun content:render --target <name>`. */
+  targets: Schema.optionalKey(Schema.Record(Schema.String, CvTarget)),
 });
 export type CvSettings = typeof CvSettings.Type;
 
@@ -78,6 +92,8 @@ export const ProjectFrontmatter = Schema.Struct({
   end: Schema.optionalKey(PlainTime),
   url: Schema.optionalKey(Schema.String),
   repo: Schema.optionalKey(Schema.String),
+  /** What an owning Education prints it as: a thesis (the default) or a course project. */
+  kind: Schema.optionalKey(Schema.Literals(['thesis', 'course-project'])),
   uses: EdgeList,
   'in-domain': EdgeList,
 });
@@ -107,6 +123,8 @@ export const EducationFrontmatter = Schema.Struct({
   field: Schema.optionalKey(Schema.String),
   /** A distinction the degree was awarded with, printed under it on the CV. */
   honors: Schema.optionalKey(Schema.String),
+  /** Course titles a targeted CV may list as relevant coursework. */
+  coursework: Schema.optionalKey(Schema.Array(Schema.String)),
   at: EdgeList,
   taught: EdgeList,
   /** A thesis or a course project the studies produced. */

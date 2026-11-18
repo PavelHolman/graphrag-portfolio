@@ -6,14 +6,17 @@ end: 2025-06
 degree: "Bachelor's (Bc.)"
 field: Informatics, Artificial Intelligence
 honors: Graduated with honours
+coursework:
+  [Cryptography and Security, Secure Code, Ethical Hacking, Programming Languages and Compilers]
 at: [organization/ctu-fit]
-delivered: [project/energy-price-forecasting]
+delivered: [project/energy-price-forecasting, project/web-penetration-test]
 taught:
   [
     skill/python,
     skill/competitive-programming,
     skill/time-series-forecasting,
     skill/rust,
+    skill/cpp,
     skill/linux,
   ]
 ---

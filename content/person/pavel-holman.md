@@ -28,14 +28,21 @@ cv:
         skill/typescript,
         skill/effect,
         skill/python,
-        skill/kotlin,
         skill/kotlin-multiplatform,
         skill/sveltekit,
         skill/postgresql,
+        skill/surrealdb,
         skill/rust,
+        skill/cpp,
+        skill/swift,
         skill/csharp,
       ]
-  omit: [education/ml-prague-2026]
+  omit: [education/ml-prague-2026, project/web-penetration-test]
+  targets:
+    cohere-cyber:
+      coursework: true
+      omit: [education/ml-prague-2026]
+      omitHighlights: ['Automated sales prospecting']
 languages:
   Czech: native
   English: B2 (Cambridge English First)
